@@ -75,7 +75,7 @@ employeeRouter.delete(
       });
     } catch (err) {
       res.status(400).json({
-        message: "Error in updating Employee Data",
+        message: "Error in deleting Employee Data",
         error: err.message,
       });
     }

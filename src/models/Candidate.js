@@ -13,6 +13,7 @@ const candidateSchema = new mongoose.Schema(
       unique: true,
       required: [true, "Candidate email is required"],
       trim: true,
+      lowercase: true,
       validate: [validator.isEmail, "Invalid email format"],
     },
     phone: {
@@ -53,14 +54,9 @@ const candidateSchema = new mongoose.Schema(
     },
     attendanceStatus: {
       type: String,
-      enum: [
-        "Not Marked",
-        "Present",
-        "Absent",
-        "Medical Leave",
-        "Work from Home",
-      ],
-      default: "Not Marked",
+      enum: ["present", "absent", "medical leave", "work from home"],
+      default: "present",
+      lowercase: true,
     },
   },
   {
