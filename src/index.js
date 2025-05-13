@@ -16,9 +16,11 @@ app.use(cookieParser());
 
 const authRouter = require("./routes/auth");
 const candidateRouter = require("./routes/candidates");
+const employeeRouter = require("./routes/employee");
 
 app.use("/", authRouter);
 app.use("/", candidateRouter);
+app.use("/", employeeRouter);
 
 dbConnect()
   .then(() => {

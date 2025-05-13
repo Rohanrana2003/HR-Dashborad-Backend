@@ -45,7 +45,7 @@ const candidateSchema = new mongoose.Schema(
     },
     department: {
       type: String,
-      enum: ["Designer", "Backend Developer", "Human Resource"],
+      default: "To be Updated",
     },
     dateOfJoining: {
       type: Date,

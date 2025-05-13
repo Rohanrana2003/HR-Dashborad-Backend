@@ -42,6 +42,9 @@ candidateRouter.post(
 candidateRouter.get("/candidates", userAuth, async (req, res) => {
   try {
     const candidates = await Candidate.find({ status: { $ne: "Selected" } });
+    if (candidates.length === 0) {
+      return res.json({ message: "No candidates found" });
+    }
 
     res.json({ message: "Fteched candidates successfully", data: candidates });
   } catch (err) {
@@ -64,13 +67,16 @@ candidateRouter.post(
       if (!newEmployee) {
         throw new Error("Invalid Candidate");
       }
+      if (newEmployee.status === "Selected") {
+        return res.send(newEmployee.name + " is already an employee"); // Checking is candidate is already an employee
+      }
 
       newEmployee.status = "Selected";
 
       await newEmployee.save();
 
       res.json({
-        message: "Fteched candidates successfully",
+        message: newEmployee.name + " is updated to employee",
         data: newEmployee,
       });
     } catch (err) {
