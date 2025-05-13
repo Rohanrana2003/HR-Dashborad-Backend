@@ -30,18 +30,71 @@ leaveRouter.post("/leave/create", userAuth, async (req, res) => {
 
     await newLeave.save();
 
-    res.status(201).json({
+    res.json({
       message: "Leave created successfully",
       data: newLeave,
     });
   } catch (err) {
     res.status(400).json({
-      message: "Error in Updating attendance Status ",
+      message: "Error in creating leave ",
       error: err.message,
     });
   }
 });
 
-//get Leaves API
+//fetch Leaves API
+leaveRouter.get("/leaves", userAuth, async (req, res) => {
+  try {
+    const leaves = await Leave.find({});
+
+    if (!leaves || leaves.length === 0) {
+      res.send("No leaves Data");
+    }
+    res.json({
+      message: "Leaves fetched successfully",
+      data: leaves,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Error in fetching leaves ",
+      error: err.message,
+    });
+  }
+});
+
+//updating leave status
+leaveRouter.post("/leaves/:status/:leaveId", userAuth, async (req, res) => {
+  try {
+    const { status, leaveId } = req.params;
+
+    const allowedStatus = ["approved", "rejected"];
+
+    if (!allowedStatus.includes(status)) {
+      throw new Error("Invalid status");
+    }
+
+    const updatedLeave = await Leave.findByIdAndUpdate(
+      leaveId,
+      {
+        status: status,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedLeave) {
+      throw new Error("Invalid Leave");
+    }
+
+    res.json({
+      message: updatedLeave.name + " leave updated to " + status,
+      data: updatedLeave,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Error in Updating leave Status ",
+      error: err.message,
+    });
+  }
+});
 
 module.exports = leaveRouter;

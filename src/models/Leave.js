@@ -18,6 +18,12 @@ const leaveSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+    lowercase: true,
+  },
   document: {
     type: String,
     required: [true, "document is required"],
