@@ -1,5 +1,5 @@
 const express = require("express");
-const validCandidate = require("../middlewares/validateCandidate");
+const { validCandidate } = require("../middlewares/validateData");
 const Candidate = require("../models/Candidate");
 const { userAuth } = require("../middlewares/userAuth");
 

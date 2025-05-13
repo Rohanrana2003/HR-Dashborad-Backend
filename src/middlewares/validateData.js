@@ -43,4 +43,21 @@ const validCandidate = (req, res, next) => {
   next(); // All validations passed
 };
 
-module.exports = validCandidate;
+const validEditEmployeeData = (req) => {
+  const allowedFeilds = [
+    "name",
+    "email",
+    "phone",
+    "department",
+    "position",
+    "dateOfJoining",
+  ];
+
+  const isValidData = Object.keys(req.body).every((field) =>
+    allowedFeilds.includes(field)
+  );
+
+  return isValidData;
+};
+
+module.exports = { validCandidate, validEditEmployeeData };
