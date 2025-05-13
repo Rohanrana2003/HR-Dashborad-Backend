@@ -5,7 +5,7 @@ const { userAuth } = require("../middlewares/userAuth");
 
 const candidateRouter = express();
 
-// to add a candidate
+// to add a candidate API
 candidateRouter.post(
   "/candidates/addCandidate",
   userAuth,
@@ -38,7 +38,7 @@ candidateRouter.post(
   }
 );
 
-// Get all candidates
+// Get all candidates API
 candidateRouter.get("/candidates", userAuth, async (req, res) => {
   try {
     const candidates = await Candidate.find({ status: { $ne: "Selected" } });
@@ -50,4 +50,35 @@ candidateRouter.get("/candidates", userAuth, async (req, res) => {
       .json({ message: "Error in fetching candidates", error: err.message });
   }
 });
+
+// Update status to selected API
+candidateRouter.post(
+  "/candidates/selected/:candidateId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const { candidateId } = req.params;
+
+      const newEmployee = await Candidate.findById(candidateId);
+
+      if (!newEmployee) {
+        throw new Error("Invalid Candidate");
+      }
+
+      newEmployee.status = "Selected";
+
+      await newEmployee.save();
+
+      res.json({
+        message: "Fteched candidates successfully",
+        data: newEmployee,
+      });
+    } catch (err) {
+      res.status(400).json({
+        message: "Error in moving candidate to employee",
+        error: err.message,
+      });
+    }
+  }
+);
 module.exports = candidateRouter;
