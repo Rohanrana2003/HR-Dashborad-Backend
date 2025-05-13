@@ -23,32 +23,55 @@ employeeRouter.get("/employees", userAuth, async (req, res) => {
 });
 
 // Updating employee data API
-employeeRouter.patch(
-  "/employees/updateEmployee",
+employeeRouter.patch("/employees/update", userAuth, async (req, res) => {
+  try {
+    if (!validEditEmployeeData(req)) {
+      throw new Error("Invalid Data updation");
+    }
+    const { email } = req.body;
+
+    const employee = await Candidate.findOne({ email: email });
+
+    if (!employee) {
+      throw new Error("employee not found with this email");
+    }
+    const id = employee._id;
+
+    // New true here will return updated user
+    const updatedEmployee = await Candidate.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.json({
+      message: "Profile get updated successfully!",
+      data: updatedEmployee,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Error in updating Employee Data",
+      error: err.message,
+    });
+  }
+});
+
+// Deleting Employee API
+employeeRouter.delete(
+  "/employees/delete/:employeeId",
   userAuth,
   async (req, res) => {
     try {
-      if (!validEditEmployeeData(req)) {
-        throw new Error("Invalid Data updation");
+      const id = req.params.employeeId;
+
+      const user = await Candidate.findById(id);
+      if (!user) {
+        throw new Error("Invalid User");
       }
-      const { email } = req.body;
 
-      const employee = await Candidate.findOne({ email: email });
-
-      if (!employee) {
-        throw new Error("employee not found with this email");
-      }
-      const id = employee._id;
-
-      // New true here will return updated user
-      const updatedEmployee = await Candidate.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      await Candidate.findByIdAndDelete(id);
 
       res.json({
-        message: "Profile get updated successfully!",
-        data: updatedEmployee,
+        message: "Deleted User successfully!",
       });
     } catch (err) {
       res.status(400).json({
@@ -58,4 +81,5 @@ employeeRouter.patch(
     }
   }
 );
+
 module.exports = employeeRouter;
