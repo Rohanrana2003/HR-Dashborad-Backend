@@ -1,12 +1,14 @@
 const express = require("express");
 const validCandidate = require("../middlewares/validateCandidate");
 const Candidate = require("../models/Candidate");
+const { userAuth } = require("../middlewares/userAuth");
 
 const candidateRouter = express();
 
 // to add a candidate
 candidateRouter.post(
   "/candidates/addCandidate",
+  userAuth,
   validCandidate,
   async (req, res) => {
     try {
@@ -37,5 +39,15 @@ candidateRouter.post(
 );
 
 // Get all candidates
-candidateRouter.get("/candidates", async (req, res) => {});
+candidateRouter.get("/candidates", userAuth, async (req, res) => {
+  try {
+    const candidates = await Candidate.find({ status: { $ne: "Selected" } });
+
+    res.json({ message: "Fteched candidates successfully", data: candidates });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ message: "Error in fetching candidates", error: err.message });
+  }
+});
 module.exports = candidateRouter;
