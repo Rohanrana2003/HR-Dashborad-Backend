@@ -15,8 +15,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 const authRouter = require("./routes/auth");
+const candidateRouter = require("./routes/candidates");
 
 app.use("/", authRouter);
+app.use("/", candidateRouter);
 
 dbConnect()
   .then(() => {

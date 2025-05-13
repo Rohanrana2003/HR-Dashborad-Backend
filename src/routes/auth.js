@@ -21,7 +21,7 @@ authRouter.post("/signup", validateSignup, async (req, res) => {
     });
 
     const newUser = await user.save();
-    const token = newUser.getJWT(); //Creating JWT token
+    const token = newUser.getJWT(); //Creating JWT token by userschema function
 
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000), // Adding token in cookie and sending response back
@@ -46,7 +46,7 @@ authRouter.post("/login", validateLogin, async (req, res) => {
     const isPasswordValid = await user.validatePassword(password); // Comparing Password
 
     if (isPasswordValid) {
-      const token = user.getJWT(); //Creating JWT token
+      const token = user.getJWT(); //Creating JWT token by userschema function
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000), // Adding token in cookie and sending response back
       });
