@@ -1,14 +1,14 @@
 const express = require("express");
 const Candidate = require("../models/Candidate");
 const { userAuth } = require("../middlewares/userAuth");
-const attendanceRouter = express();
+const attendanceRouter = express.Router();
 
 // getting Attendace data API
 attendanceRouter.get("/employees/attendance", userAuth, async (req, res) => {
   try {
-    const employees = await Candidate.find({ status: "Selected" });
+    const employees = await Candidate.find({ status: "selected" });
 
-    if (!employees) {
+    if (!employees || employees.length === 0) {
       res.json({ message: "No employees to show in attendance" });
     }
 

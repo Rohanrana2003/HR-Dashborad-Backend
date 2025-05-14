@@ -3,12 +3,14 @@ const { userAuth } = require("../middlewares/userAuth");
 const Candidate = require("../models/Candidate");
 const { validEditEmployeeData } = require("../middlewares/validateData");
 
-const employeeRouter = express();
+const employeeRouter = express.Router();
 
 // fetching all employess API
 employeeRouter.get("/employees", userAuth, async (req, res) => {
   try {
-    const employees = await Candidate.find({ status: "Selected" });
+    const employees = await Candidate.find({
+      status: "selected",
+    });
 
     if (!employees) {
       res.json({ message: "No employees to show" });
@@ -33,7 +35,9 @@ employeeRouter.patch("/employees/update", userAuth, async (req, res) => {
     const employee = await Candidate.findOne({ email: email });
 
     if (!employee) {
-      throw new Error("employee not found with this email");
+      res.status(400).json({
+        message: "Employee not found with this Email",
+      });
     }
     const id = employee._id;
 

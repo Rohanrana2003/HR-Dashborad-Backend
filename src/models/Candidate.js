@@ -38,19 +38,22 @@ const candidateSchema = new mongoose.Schema(
       type: String,
       required: [true, "Resume is required"],
       validate: [validator.isURL, "Invalid resume URL"],
+      default:
+        "https://drive.google.com/file/d/1Zp2_yTCqHpun2X1zY-if9ScoXa_QZH7V/view?usp=drive_link",
     },
     status: {
       type: String,
-      enum: ["Applied", "Selected", "Rejected"],
-      default: "Applied",
+      enum: ["selected", "rejected", "applied", "ongoing", "new", "scheduled"],
+      default: "applied",
     },
     department: {
       type: String,
       default: "To be Updated",
+      lowercase: true,
     },
     dateOfJoining: {
       type: Date,
-      default: null, // Set this when status is updated to "Selected"
+      default: () => new Date(), // Sets current date as default
     },
     attendanceStatus: {
       type: String,

@@ -31,4 +31,6 @@ const leaveSchema = new mongoose.Schema({
   },
 });
 
+// to prevent from duplicate leaves
+leaveSchema.index({ name: 1, department: 1, date: 1 }, { unique: true });
 module.exports = mongoose.model("Leave", leaveSchema);

@@ -2,7 +2,7 @@ const express = require("express");
 const { userAuth } = require("../middlewares/userAuth");
 const Candidate = require("../models/Candidate");
 const Leave = require("../models/Leave");
-const leaveRouter = express();
+const leaveRouter = express.Router();
 
 // create a leave API
 leaveRouter.post("/leave/create", userAuth, async (req, res) => {
@@ -35,6 +35,14 @@ leaveRouter.post("/leave/create", userAuth, async (req, res) => {
       data: newLeave,
     });
   } catch (err) {
+    if (err.code === 11000) {
+      // Duplicate key error
+      return res.status(409).json({
+        error: "Duplicate leave entry",
+        message:
+          "Leave already applied for this date by the user in the same department.",
+      });
+    }
     res.status(400).json({
       message: "Error in creating leave ",
       error: err.message,
@@ -63,7 +71,7 @@ leaveRouter.get("/leaves", userAuth, async (req, res) => {
 });
 
 //updating leave status
-leaveRouter.post("/leaves/:status/:leaveId", userAuth, async (req, res) => {
+leaveRouter.patch("/leaves/:status/:leaveId", userAuth, async (req, res) => {
   try {
     const { status, leaveId } = req.params;
 

@@ -5,7 +5,8 @@ const {
   validateSignup,
 } = require("../middlewares/validateAuth");
 const User = require("../models/User");
-const authRouter = express();
+const { userAuth } = require("../middlewares/userAuth");
+const authRouter = express.Router();
 
 // Signup API
 authRouter.post("/signup", validateSignup, async (req, res) => {
@@ -40,7 +41,7 @@ authRouter.post("/login", validateLogin, async (req, res) => {
 
     const user = await User.findOne({ email: email }); //Finding user in database
     if (!user) {
-      throw new Error("Invalid Credentials");
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isPasswordValid = await user.validatePassword(password); // Comparing Password
@@ -52,8 +53,17 @@ authRouter.post("/login", validateLogin, async (req, res) => {
       });
       res.json({ message: "LoggedIn Successfully", data: user });
     } else {
-      throw new Error("Invalid Credentials");
+      res.status(400).json({ message: "Invalid credentials" });
     }
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
+// checking Auth API
+authRouter.get("/check-auth", userAuth, async (req, res) => {
+  try {
+    res.json({ message: "User Authenticated", data: "good" });
   } catch (err) {
     res.status(400).send(err.message);
   }

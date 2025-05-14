@@ -1,7 +1,7 @@
 const validator = require("validator");
 
 const validCandidate = (req, res, next) => {
-  const { name, email, phone, position, experience, resumeUrl } = req.body;
+  const { name, email, phone, position, experience } = req.body;
 
   // Name
   if (!name || name.trim().length < 2) {
@@ -36,9 +36,9 @@ const validCandidate = (req, res, next) => {
   }
 
   // Resume URL
-  if (!resumeUrl || !validator.isURL(resumeUrl)) {
-    return res.status(400).json({ message: "Invalid resume URL" });
-  }
+  // if (!resumeUrl || !validator.isURL(resumeUrl)) {
+  //   return res.status(400).json({ message: "Invalid resume URL" });
+  // }
 
   next(); // All validations passed
 };

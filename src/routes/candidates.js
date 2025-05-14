@@ -3,7 +3,7 @@ const { validCandidate } = require("../middlewares/validateData");
 const Candidate = require("../models/Candidate");
 const { userAuth } = require("../middlewares/userAuth");
 
-const candidateRouter = express();
+const candidateRouter = express.Router();
 
 // to add a candidate API
 candidateRouter.post(
@@ -12,7 +12,7 @@ candidateRouter.post(
   validCandidate,
   async (req, res) => {
     try {
-      const { name, email, phone, position, experience, resumeUrl } = req.body;
+      const { name, email, phone, position, experience } = req.body;
 
       const candidate = new Candidate({
         name,
@@ -20,12 +20,12 @@ candidateRouter.post(
         phone,
         position,
         experience,
-        resumeUrl,
       });
 
       const existingUser = await Candidate.findOne({ email: email }); // throwing error if user already exists
       if (existingUser) {
-        throw new Error("User with this email already exists");
+        res.status(400).json({ message: "User already exists" });
+        return;
       }
 
       const newCandidate = await candidate.save();
@@ -41,7 +41,7 @@ candidateRouter.post(
 // Get all candidates API
 candidateRouter.get("/candidates", userAuth, async (req, res) => {
   try {
-    const candidates = await Candidate.find({ status: { $ne: "Selected" } });
+    const candidates = await Candidate.find({ status: { $ne: "selected" } });
     if (candidates.length === 0) {
       return res.json({ message: "No candidates found" });
     }
@@ -55,28 +55,47 @@ candidateRouter.get("/candidates", userAuth, async (req, res) => {
 });
 
 // Update status to selected API
-candidateRouter.post(
-  "/candidates/selected/:candidateId",
+candidateRouter.patch(
+  "/candidates/:status/:candidateId",
   userAuth,
   async (req, res) => {
     try {
-      const { candidateId } = req.params;
+      const { status, candidateId } = req.params;
 
-      const newEmployee = await Candidate.findById(candidateId);
+      const allowedStatus = [
+        "selected",
+        "rejected",
+        "applied",
+        "ongoing",
+        "new",
+        "scheduled",
+      ];
+
+      if (!allowedStatus.includes(status)) {
+        throw new Error("Invalid status");
+      }
+
+      const newEmployee = await Candidate.findByIdAndUpdate(
+        candidateId,
+        {
+          status: status,
+        },
+        { new: true, runValidators: true }
+      );
 
       if (!newEmployee) {
         throw new Error("Invalid Candidate");
       }
-      if (newEmployee.status === "Selected") {
-        return res.send(newEmployee.name + " is already an employee"); // Checking is candidate is already an employee
-      }
+      // if (newEmployee.status === status) {
+      //   return res.send(newEmployee.name + " is already an employee"); // Checking i candidate is already an employee
+      // }
 
-      newEmployee.status = "Selected";
+      // newEmployee.status = status;
 
-      await newEmployee.save();
+      // await newEmployee.save();
 
       res.json({
-        message: newEmployee.name + " is updated to employee",
+        message: newEmployee.name + " is " + status,
         data: newEmployee,
       });
     } catch (err) {
