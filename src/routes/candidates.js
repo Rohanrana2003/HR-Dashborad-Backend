@@ -2,6 +2,7 @@ const express = require("express");
 const { validCandidate } = require("../middlewares/validateData");
 const Candidate = require("../models/Candidate");
 const { userAuth } = require("../middlewares/userAuth");
+const upload = require("../middlewares/upload");
 
 const candidateRouter = express.Router();
 
@@ -9,17 +10,27 @@ const candidateRouter = express.Router();
 candidateRouter.post(
   "/candidates/addCandidate",
   userAuth,
+  upload.single("resume"), // multer middleware to handle file upload
   validCandidate,
   async (req, res) => {
     try {
       const { name, email, phone, position, experience } = req.body;
 
-      const candidate = new Candidate({
+      if (!req.file) {
+        return res.status(400).json({ message: "Resume is required" });
+      }
+
+      const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`; // Create the URL for the uploaded file
+
+      const newCandidate = new Candidate({
         name,
         email,
         phone,
         position,
         experience,
+        resumeUrl, // Store the resume URL in the database
       });
 
       const existingUser = await Candidate.findOne({ email: email }); // throwing error if user already exists
@@ -28,8 +39,12 @@ candidateRouter.post(
         return;
       }
 
-      const newCandidate = await candidate.save();
-      res.json({ message: "Saved candidate successfully", data: newCandidate });
+      await newCandidate.save();
+
+      res.status(201).json({
+        message: "Saved candidate successfully",
+        data: newCandidate,
+      });
     } catch (err) {
       res
         .status(400)

@@ -37,9 +37,7 @@ const candidateSchema = new mongoose.Schema(
     resumeUrl: {
       type: String,
       required: [true, "Resume is required"],
-      validate: [validator.isURL, "Invalid resume URL"],
-      default:
-        "https://drive.google.com/file/d/1Zp2_yTCqHpun2X1zY-if9ScoXa_QZH7V/view?usp=drive_link",
+      // validate: [validator.isURL, "Invalid resume UL"],
     },
     status: {
       type: String,

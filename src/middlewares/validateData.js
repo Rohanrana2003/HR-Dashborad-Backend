@@ -35,11 +35,6 @@ const validCandidate = (req, res, next) => {
       .json({ message: "Experience must be a non-negative number" });
   }
 
-  // Resume URL
-  // if (!resumeUrl || !validator.isURL(resumeUrl)) {
-  //   return res.status(400).json({ message: "Invalid resume URL" });
-  // }
-
   next(); // All validations passed
 };
 

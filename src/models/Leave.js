@@ -20,14 +20,12 @@ const leaveSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "approved", "rejected"],
-    default: "pending",
-    lowercase: true,
+    enum: ["Pending", "Approved", "Rejected"],
+    default: "Pending",
   },
   document: {
     type: String,
     required: [true, "document is required"],
-    validate: [validator.isURL, "Invalid Doc URL"], // Array of file paths or URLs
   },
 });
 
