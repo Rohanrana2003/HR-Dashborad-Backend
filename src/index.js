@@ -25,8 +25,6 @@ app.use(
   })
 );
 
-app.options("*", cors()); // ✅ add this for preflight support
-
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
