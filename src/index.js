@@ -5,17 +5,17 @@ const cookieParser = require("cookie-parser");
 const dbConnect = require("./config/database");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
-// app.use("/uploads", express.static("uploads")); // Serve files from the 'uploads' folder
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 const authRouter = require("./routes/auth");
@@ -33,8 +33,8 @@ app.use("/", leaveRouter);
 dbConnect()
   .then(() => {
     console.log("Database connected Successfully");
-    app.listen(port, () => {
-      console.log("App Listening");
+    app.listen(PORT, () => {
+      console.log(`App listening on port ${PORT}`);
     });
   })
-  .catch((err) => console.error("Can't able to connect to Database"));
+  .catch((err) => console.error("Can't connect to Database", err));
