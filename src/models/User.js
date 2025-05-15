@@ -4,9 +4,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-const JWT_EXPIRES_IN = "2h"; // 2 hours
-
 const userSchema = new mongoose.Schema(
   {
     name: {
