@@ -26,8 +26,10 @@ authRouter.post("/signup", validateSignup, async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true, // So JS on client can't access it (better security)
-      secure: true, // Send only over HTTPS (Render uses HTTPS)
-      sameSite: "none", // Allows cross-site cookies (important for your case)
+      // secure: true,
+      // sameSite: "none",
+      secure: false, // For development
+      sameSite: "lax", // For development
       expires: new Date(Date.now() + 8 * 3600000),
     });
 
@@ -53,8 +55,10 @@ authRouter.post("/login", validateLogin, async (req, res) => {
       const token = user.getJWT(); //Creating JWT token by userschema function
       res.cookie("token", token, {
         httpOnly: true, // So JS on client can't access it (better security)
-        secure: true, // Send only over HTTPS (Render uses HTTPS)
-        sameSite: "none", // Allows cross-site cookies (important for your case)
+        // secure: true,
+        // sameSite: "none",
+        secure: false, // For development
+        sameSite: "lax", // For development
         expires: new Date(Date.now() + 8 * 3600000),
       });
       res.json({ message: "LoggedIn Successfully", data: user });
