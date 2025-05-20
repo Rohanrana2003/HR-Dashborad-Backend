@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://hr-dashboard-frontend-sbbf.onrender.com",
+  "http://13.51.150.217",
 ];
 
 app.use(
