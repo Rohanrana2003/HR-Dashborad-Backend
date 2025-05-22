@@ -11,6 +11,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://hr-dashboard-frontend-sbbf.onrender.com",
   "http://13.51.150.217",
+  "https://hirease.site",
 ];
 
 app.use(
