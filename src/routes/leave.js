@@ -31,7 +31,7 @@ leaveRouter.post(
         });
       }
 
-      const document = `${req.protocol}://${req.get("host")}/uploads/${
+      const document = `${req.protocol}://${req.get("host")}/api/uploads/${
         req.file.filename
       }`;
 
