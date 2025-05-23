@@ -29,8 +29,7 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use("/uploads", express.static(path.join(__dirname, "../uploads")));   // For Render.com
-app.use("/uploads", express.static(path.join(__dirname, "../../uploads"))); //For AWS
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 const authRouter = require("./routes/auth");
 const candidateRouter = require("./routes/candidates");
