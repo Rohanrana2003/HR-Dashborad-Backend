@@ -29,8 +29,8 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use("/uploads", express.static(path.join(__dirname, "../uploads")));  //FOR Render
-app.use("/api/uploads", express.static(path.join(__dirname, "../uploads"))); // FOR AWS
+app.use("/uploads", express.static(path.join(__dirname, "../uploads"))); //FOR Render
+// app.use("/api/uploads", express.static(path.join(__dirname, "../uploads"))); // FOR AWS
 
 const authRouter = require("./routes/auth");
 const candidateRouter = require("./routes/candidates");
