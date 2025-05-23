@@ -20,9 +20,13 @@ candidateRouter.post(
         return res.status(400).json({ message: "Resume is required" });
       }
 
-      const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${
+      // const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${
+      //   req.file.filename
+      // }`; // For render
+
+      const resumeUrl = `${req.protocol}://${req.get("host")}/api/uploads/${
         req.file.filename
-      }`; // Create the URL for the uploaded file
+      }`; // For AWS
 
       const newCandidate = new Candidate({
         name,
