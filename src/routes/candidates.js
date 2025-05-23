@@ -22,11 +22,9 @@ candidateRouter.post(
 
       // const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${
       //   req.file.filename
-      // }`; // For render
+      // }`; // Create the URL for the uploaded file
 
-      const resumeUrl = `${req.protocol}://${req.get("host")}/api/uploads/${
-        req.file.filename
-      }`; // For AWS
+      const resumeUrl = `/uploads/${req.file.filename}`; // Create the URL for the uploaded file
 
       const newCandidate = new Candidate({
         name,
